@@ -67,7 +67,7 @@ class Board extends Component {
         if (this.props.status === "ended") {
             return;
         }
-        api.clickSquare("sarasa", square.x, square.y, 'FLAG').then(({data}) => {
+        api.clickSquare(this.props.gameId, square.x, square.y, 'FLAG').then(({data}) => {
             this.props.updateAfterClick(data)
             this.setState( { rows: this.updateBoard(data)})
 
@@ -80,7 +80,7 @@ class Board extends Component {
         if (this.props.status === "ended") {
             return;
         }
-        api.clickSquare("sarasa", square.x, square.y, 'CLICK').then(({data}) => {
+        api.clickSquare(this.props.gameId, square.x, square.y, 'CLICK').then(({data}) => {
             this.props.updateAfterClick(data)
             this.setState( { rows: this.updateBoard(data)})
 
@@ -93,7 +93,6 @@ class Board extends Component {
 
     render() {
         let rows = this.state.rows.map((squares, index) => (
-            //console.log(squares),
             <Row
                 squares={squares}
                 open={this.open}

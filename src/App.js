@@ -10,6 +10,7 @@ class App extends Component {
         super();
 
         this.state = {
+            gameId: "",
             gameStatus: "waiting", // can be running, waiting, or ended //AGREGAR OTRO STATUS, ALGO TIPO TO_START, PARA PANTALLA LOGIN
             time: 0, // in seconds, will format later
             flagCount: 0,
@@ -25,7 +26,10 @@ class App extends Component {
     }
 
     createNewGame = (rows, cols, mines) => {
-        api.createGame("sarasa", rows, cols, mines).then(({ data }) => this.setStartGameState(data))
+        api.createGame(rows, cols, mines).then(({ data }) => {
+            console.log(data)
+            this.setStartGameState(data)
+        })
     }
 
     componentDidMount() {
@@ -40,14 +44,13 @@ class App extends Component {
 
     componentDidUpdate(nextProps, nextState) {
         if (this.state.gameStatus === "running") {
-            api.holaMundo().then( ({ data }) => console.log(data));
             this.checkForWinner();
         }
     }
 
     setStartGameState = (data) => {
-        console.log(data.field)
         this.setState( {
+            gameId: data.id,
             mines: data.numMines,
             rows: data.numRows,
             columns: data.numCols,
@@ -82,7 +85,6 @@ class App extends Component {
     reset = () => {
         this.intervals.map(clearInterval);
         this.setState(Object.assign({}, this.baseState), () => {
-            debugger;
             this.createNewGame();
             this.intervals = [];
         });
@@ -150,6 +152,7 @@ class App extends Component {
                                         show={this.state.shownComponent}
                                     />
                                     <Board
+                                        gameId={this.state.gameId}
                                         show={this.state.shownComponent}
                                         openSquares={this.state.openSquares}
                                         mines={this.state.mines}

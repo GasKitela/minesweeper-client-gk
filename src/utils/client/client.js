@@ -1,22 +1,21 @@
 import axios from 'axios'
 import humps from 'humps'
-import {identity} from "ramda"
 
-const BASE_URI = 'http://localhost:4433';
+const BASE_URI = 'http://minesweeper-api-gk.herokuapp.com'; // "http://localhost:4433";
 
 const api = {
-    holaMundo: () =>
-        client.get('/hola-mundo'),
-    createGame: (game_id, rows, cols, mines) =>
-        client.post(`/games/${game_id}/${rows}/${cols}/${mines}`),
-    clickSquare: (game_id, rows, cols, action) =>
-        client.put(`/games/${game_id}/click/${rows}/${cols}/${action}`),
-    getParentFlow: (ticketId, parentFlowId) =>
-        client.get(`/aftersale/ajax/hank/tickets/${ticketId}/flows/${parentFlowId}`),
-    getEmailPreview: data =>
-        client.post("/aftersale/ajax/email-preview/creation", data),
-    closeInfoRequest: data =>
-        client.post(`/aftersale/ajax/info-request/${data.requestId}/close`, data),
+    createGame: (rows, cols, mines) =>
+        client.post(`/ms/new-game`,  {
+            "rows": parseInt(rows),
+            "cols": parseInt(cols),
+            "mines": parseInt(mines)
+        }),
+    clickSquare: (game_id, row, col, action) =>
+        client.put(`/ms/${game_id}/click`, {
+            "row": parseInt(row),
+            "col": parseInt(col),
+            "action": action
+        }),
 }
 
 const client = (() => {
@@ -35,10 +34,6 @@ const client = (() => {
         }
     })
 
- /*   instance.interceptors.response.use(identity, error => {
-        if (error.response.status === 401) window.location.reload(true)
-        return Promise.reject(error);
-    });*/
 
     return instance
 })()
